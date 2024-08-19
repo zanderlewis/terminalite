@@ -1,0 +1,13 @@
+name = "terminalite"
+version = "0.1.0"
+license = "MIT"
+author = "Zander Lewis"
+maintainer = "Zander Lewis <zander@zanderlewis.dev>"
+description = "A Fortran library for colorizing terminal text."
+
+[build]
+auto-executables = true
+auto-tests = true
+
+[library]
+source-dir = "src"
