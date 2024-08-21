@@ -1,6 +1,6 @@
 ! TERMINALITE
 ! ---------------------------------------------------------
-! A simple Fortran module to colorize text in the terminal
+! A simple Fortran module to colorize text in the terminal using numbers
 ! Author: Zander Lewis
 ! License: MIT
 ! Repository: https://github.com/zanderlewis/terminalite
