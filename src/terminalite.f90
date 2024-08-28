@@ -35,7 +35,7 @@
 ! program terminalite_program
 !     use terminalite
 !     implicit none
-!     call terminalite('Hello, World!', 31, 47, 1)
+!     call terminalite('Hello, World!', 'FF0000', 'FFFFFF', 1)
 ! end program terminalite_program
 ! ---------------------------------------------------------
 
@@ -49,28 +49,55 @@ contains
         write(str, '(I0)') i
         str = adjustl(str)
     end function itoa
+
+    function hex_to_ansi(hex) result(ansi_code)
+        implicit none
+        character(len=*), intent(in) :: hex
+        integer :: r, g, b
+        character(len=20) :: ansi_code
+
+        ! Convert hex to RGB
+        read(hex(1:2), '(Z2)') r
+        read(hex(3:4), '(Z2)') g
+        read(hex(5:6), '(Z2)') b
+
+        ! Create ANSI escape code for 24-bit color
+        write(ansi_code, '(A,I0,A,I0,A,I0,A)') char(27)//'[38;2;', r, ';', g, ';', b, 'm'
+    end function hex_to_ansi
+
+    function hex_to_bg_ansi(hex) result(ansi_code)
+        implicit none
+        character(len=*), intent(in) :: hex
+        integer :: r, g, b
+        character(len=20) :: ansi_code
+
+        ! Convert hex to RGB
+        read(hex(1:2), '(Z2)') r
+        read(hex(3:4), '(Z2)') g
+        read(hex(5:6), '(Z2)') b
+
+        ! Create ANSI escape code for 24-bit background color
+        write(ansi_code, '(A,I0,A,I0,A,I0,A)') char(27)//'[48;2;', r, ';', g, ';', b, 'm'
+    end function hex_to_bg_ansi
 end module utils
 
-subroutine terminalite(text, color, bg_color, style)
+subroutine terminalite(text, color_hex, bg_color_hex, style)
     use utils
     implicit none
-    character(len=*), intent(in) :: text
-    integer, intent(in) :: color, bg_color, style
-    ! Color variables
-    integer, parameter :: black = 30, red = 31, green = 32, yellow = 33, blue = 34, magenta = 35, cyan = 36, white = 37
-    ! Background color variables
-    integer, parameter :: bg_black = 40, bg_red = 41, bg_green = 42, bg_yellow = 43, bg_blue = 44, bg_magenta = 45, bg_cyan = 46, bg_white = 47
-    ! Text style variables
-    integer, parameter :: bold = 1, underline = 4, blink = 5, reverse = 7, conceal = 8
-    ! Reset all attributes
-    integer, parameter :: reset = 0
+    character(len=*), intent(in) :: text, color_hex, bg_color_hex
+    integer, intent(in) :: style
+    character(len=20) :: color_code, bg_color_code
 
-    ! Convert the integers to strings
-    write(*, '(A)') char(27)//'['//trim(adjustl(itoa(style)))//';'//trim(adjustl(itoa(color)))//';'//trim(adjustl(itoa(bg_color)))//'m'//trim(text)//char(27)//'[0m'
+    ! Convert hex to ANSI escape codes
+    color_code = hex_to_ansi(color_hex)
+    bg_color_code = hex_to_bg_ansi(bg_color_hex)
+
+    ! Print the text with the specified attributes
+    write(*, '(A)') char(27)//'['//trim(adjustl(itoa(style)))//'m'//trim(color_code)//trim(bg_color_code)//trim(text)//char(27)//'[0m'
 end subroutine terminalite
 
 program terminalite_program
     use utils
     implicit none
-    call terminalite('Hello, World!', 31, 47, 1)
+    call terminalite('Hello, World!', 'FF0000', 'FFFFFF', 1)  ! Red text with white background and bold style
 end program terminalite_program
