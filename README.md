@@ -1,5 +1,5 @@
 # Terminalite
-A library for colorizing terminal text in Fortran as part of learning Fortran.
+A library for colorizing terminal text in Fortran.
 
 ## Usage
 1. Include the `terminalite.f90` file in your project.
@@ -7,24 +7,21 @@ A library for colorizing terminal text in Fortran as part of learning Fortran.
 [dependencies]
 terminalite = { git = "https://github.com/zanderlewis/terminalite" }
 ```
-2. Install the module in your Fortran program.
-```bash
-fpm build
-fpm run
-```
-3. Use the `terminalite` module in your Fortran program.
+2. Use the `terminalite` module in your Fortran program.
 ```fortran
 program terminalite_program
     use utils
     implicit none
-    call terminalite('Hello, World!', 31, 47, 1)
+    call colorize('Hello, World!', 'FF0000', 'FFFFFF', 1)  ! Red text with white background and bold style
+    ! Or, you can use template strings
+    call template('[BOLD][FG:FF0000][BG:FFFFFF]Hello, World![RESET]')
 end program terminalite_program
 ```
-4. Compile the program
+3. Compile the program
 ```bash
-gfortran -o terminalite_program terminalite_program.f90 terminalite.f90
+fpm build
 ```
-5. Run the program
+4. Run the program
 ```bash
-./terminalite_program
+fpm run
 ```
